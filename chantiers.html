@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TANGO · Deux chantiers exploratoires</title>
+<style>
+  :root{
+    --paper:#eef1f2;
+    --card:#ffffff;
+    --ink:#15191c;
+    --muted:#5c6771;
+    --line:#d5dbde;
+    --deep:#123a47;
+    --deep-soft:#e3ecee;
+    --signal:#d8402d;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--sans); font-size:17px; line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:0 28px 96px}
+
+  header.hero{padding:64px 0 40px; border-bottom:1px solid var(--line); margin-bottom:8px}
+  .eyebrow{font-family:var(--mono); font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--deep); margin:0 0 18px}
+  h1{font-size:clamp(34px,6vw,52px); line-height:1.04; letter-spacing:-.02em; font-weight:750; margin:0 0 14px}
+  h1 .sub{display:block; font-weight:450; font-size:clamp(17px,2.4vw,21px); color:var(--muted); letter-spacing:0; margin-top:14px; line-height:1.45}
+  .nogama{margin:26px 0 30px; padding:14px 18px; border-left:3px solid var(--deep); background:var(--deep-soft); font-size:15.5px; border-radius:0 8px 8px 0}
+  .nogama strong{color:var(--deep)}
+
+  .convoy{margin:6px 0 0}
+  .convoy figcaption{font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-top:8px; letter-spacing:.02em}
+
+  section{padding-top:52px}
+  h2{font-size:26px; letter-spacing:-.01em; font-weight:700; margin:0 0 6px; line-height:1.15}
+  h2 .num{font-family:var(--mono); font-size:14px; color:var(--signal); font-weight:600; margin-right:12px; letter-spacing:.02em}
+  h3{font-size:18px; font-weight:680; margin:30px 0 6px; letter-spacing:-.005em}
+  .lead{color:var(--ink)}
+  p{margin:12px 0}
+  a{color:var(--deep); text-underline-offset:2px; text-decoration-thickness:1px}
+  a:hover{text-decoration-color:var(--signal)}
+  a:focus-visible{outline:2px solid var(--signal); outline-offset:2px; border-radius:2px}
+  strong{font-weight:670}
+  em{font-style:italic}
+  code{font-family:var(--mono); font-size:.86em; background:#e7ecee; padding:1px 5px; border-radius:4px}
+  ul{margin:12px 0; padding-left:0; list-style:none}
+  ul li{position:relative; padding-left:20px; margin:9px 0}
+  ul li::before{content:""; position:absolute; left:0; top:.62em; width:9px; height:2px; background:var(--deep); border-radius:1px}
+  ol{margin:12px 0; padding-left:22px}
+  ol li{margin:9px 0}
+  .divider{height:1px; background:var(--line); border:0; margin:52px 0 0}
+
+  .callout{border:1px solid var(--line); background:var(--card); border-radius:12px; padding:18px 20px; margin:22px 0}
+  .callout .k{font-family:var(--mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--signal); display:block; margin-bottom:6px}
+
+  /* critères d'évaluation, mis en avant */
+  .criteria{border:1px solid var(--line); border-left:4px solid var(--signal); background:var(--card); border-radius:10px; padding:16px 22px 18px; margin:22px 0}
+  .criteria .k{font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:.11em; color:var(--signal); display:block; margin-bottom:10px; font-weight:600}
+  .criteria ul{margin:0}
+
+  figure.diagram{margin:22px 0 8px; border:1px solid var(--line); background:var(--card); border-radius:12px; padding:18px 16px 8px}
+  .scroll{overflow-x:auto}
+  figure.diagram svg{display:block; width:100%; min-width:520px; height:auto}
+  figure.diagram figcaption{font-size:13.5px; color:var(--muted); margin-top:6px; padding:0 4px}
+  .d-box{fill:#fff; stroke:var(--line); stroke-width:1.5}
+  .d-box.accent{stroke:var(--signal); stroke-width:1.8}
+  .d-grp{fill:none; stroke:var(--deep); stroke-width:1.1; stroke-dasharray:5 4; opacity:.45}
+  .d-txt{font-family:var(--mono); font-size:13px; font-weight:500; fill:var(--ink)}
+  .d-lbl{font-family:var(--mono); font-size:11px; font-weight:500; fill:var(--muted); letter-spacing:.02em}
+  .d-arrow{stroke:var(--deep); stroke-width:1.7; fill:none}
+  .d-dash{stroke:var(--deep); stroke-width:1.4; fill:none; stroke-dasharray:4 4; opacity:.7}
+
+  figure.gif{margin:20px 0}
+  figure.gif .ph{border:2px dashed var(--line); border-radius:12px; background:var(--card);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    min-height:190px; color:var(--muted); font-family:var(--mono); font-size:13px; line-height:1.7; padding:20px}
+  figure.gif .ph code{background:#e7ecee}
+  figure.gif img{display:block; width:100%; border-radius:12px; border:1px solid var(--line)}
+  figure.gif figcaption{font-size:13.5px; color:var(--muted); margin-top:8px; font-style:italic}
+
+  .res h3{margin-top:22px; font-family:var(--mono); font-size:12.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--deep); font-weight:600}
+  .res ul li{margin:7px 0; font-size:15.5px}
+
+  footer{margin-top:60px; padding-top:22px; border-top:1px solid var(--line); font-family:var(--mono); font-size:12.5px; color:var(--muted); letter-spacing:.02em}
+
+  @media (max-width:560px){
+    body{font-size:16px}
+    .wrap{padding:0 18px 72px}
+    header.hero{padding:44px 0 32px}
+  }
+  @media print{
+    body{background:#fff}
+    a{color:#000}
+    figure.diagram,figure.gif img,.callout,.criteria{break-inside:avoid}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .veh{animation:none !important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">TANGO · Projet exploratoire · UMMISCO 2026</p>
+    <h1>Deux chantiers exploratoires
+      <span class="sub">Perception et recalage · contrôle générique d'une flotte de robots différentiels à perception externalisée.</span>
+    </h1>
+
+    <figure class="convoy">
+      <svg viewBox="0 0 380 60" role="img" aria-label="Un convoi de robots : une perturbation de freinage se propage vers l'arrière.">
+        <line x1="8" y1="46" x2="372" y2="46" stroke="var(--line)" stroke-width="1.5"/>
+        <g>
+          <circle class="veh" cx="40"  cy="30" r="9" fill="var(--deep)" style="animation:brake 4.2s 1.40s infinite"/>
+          <circle class="veh" cx="86"  cy="30" r="9" fill="var(--deep)" style="animation:brake 4.2s 1.20s infinite"/>
+          <circle class="veh" cx="132" cy="30" r="9" fill="var(--deep)" style="animation:brake 4.2s 1.00s infinite"/>
+          <circle class="veh" cx="178" cy="30" r="9" fill="var(--deep)" style="animation:brake 4.2s 0.80s infinite"/>
+          <circle class="veh" cx="224" cy="30" r="9" fill="var(--deep)" style="animation:brake 4.2s 0.60s infinite"/>
+          <circle class="veh" cx="270" cy="30" r="9" fill="var(--deep)" style="animation:brake 4.2s 0.40s infinite"/>
+          <circle class="veh" cx="316" cy="30" r="9" fill="var(--deep)" style="animation:brake 4.2s 0.20s infinite"/>
+          <circle class="veh" cx="344" cy="30" r="9.5" fill="var(--signal)" style="animation:brake-lead 4.2s 0s infinite"/>
+        </g>
+      </svg>
+      <figcaption>Le leader freine, la perturbation remonte le convoi et s'amplifie : le fil rouge du projet.</figcaption>
+    </figure>
+
+    <div class="nogama">
+      <strong>Les deux chantiers se mènent à 100 % sans GAMA.</strong> GAMA n'est que le contexte et la cible d'intégration finale : la perception et le contrôle se développent et se mesurent avec un banc d'essai local, l'état cible venant de n'importe quelle source (script local, trajectoire, mini-modèle de convoi). Les deux chantiers sont indépendants l'un de l'autre.
+    </div>
+  </header>
+
+  <!-- ============ 1 ============ -->
+  <section id="contexte">
+    <h2><span class="num">01</span>Contexte du projet</h2>
+    <p class="lead">TANGO cherche à rendre une simulation multi-agents <strong>tangible</strong> : au lieu de projeter des agents virtuels sur une maquette, on les <em>incarne</em> avec de vrais robots mobiles qui se déplacent sur un modèle physique. Une simulation <a href="https://gama-platform.org/" target="_blank" rel="noopener">GAMA</a> pilote en temps réel une flotte de petits robots, observe leur position réelle, et corrige en continu l'écart entre le monde simulé et le monde réel.</p>
+
+    <p>Vue d'ensemble de la boucle. Les deux chantiers sont encadrés ; l'état cible peut venir de GAMA (contexte) ou d'un simple script :</p>
+
+    <figure class="diagram">
+      <div class="scroll">
+      <svg viewBox="0 0 880 165" role="img" aria-label="Architecture : caméra, perception et état réel forment le chantier 1 ; contrôleur et commandes forment le chantier 2 ; les robots sont observés en retour par la caméra.">
+        <defs><marker id="a1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--deep)"/></marker></defs>
+        <rect class="d-grp" x="4"   y="42" width="524" height="76" rx="10"/>
+        <rect class="d-grp" x="540" y="42" width="336" height="76" rx="10"/>
+        <text class="d-lbl" x="16" y="58">Chantier 1 · perception</text>
+        <text class="d-lbl" x="552" y="58">Chantier 2 · contrôle</text>
+        <rect class="d-box" x="556" y="4" width="150" height="30" rx="6"/>
+        <text class="d-txt" x="631" y="24" text-anchor="middle">État cible</text>
+        <path class="d-arrow" d="M631,34 L631,66" marker-end="url(#a1)"/>
+        <rect class="d-box" x="14"  y="66" width="150" height="40" rx="7"/>
+        <text class="d-txt" x="89"  y="91" text-anchor="middle">Caméra fixe</text>
+        <rect class="d-box" x="189" y="66" width="150" height="40" rx="7"/>
+        <text class="d-txt" x="264" y="86" text-anchor="middle">Détection</text>
+        <text class="d-txt" x="264" y="100" text-anchor="middle">et pose</text>
+        <rect class="d-box" x="364" y="66" width="150" height="40" rx="7"/>
+        <text class="d-txt" x="439" y="91" text-anchor="middle">État réel · x,y,θ</text>
+        <rect class="d-box" x="556" y="66" width="150" height="40" rx="7"/>
+        <text class="d-txt" x="631" y="86" text-anchor="middle">Contrôleur</text>
+        <text class="d-txt" x="631" y="100" text-anchor="middle">boucle fermée</text>
+        <rect class="d-box" x="716" y="66" width="150" height="40" rx="7"/>
+        <text class="d-txt" x="791" y="91" text-anchor="middle">Robots</text>
+        <path class="d-arrow" d="M164,86 L187,86" marker-end="url(#a1)"/>
+        <path class="d-arrow" d="M339,86 L362,86" marker-end="url(#a1)"/>
+        <path class="d-arrow" d="M514,86 L554,86" marker-end="url(#a1)"/>
+        <path class="d-arrow" d="M706,86 L714,86" marker-end="url(#a1)"/>
+        <path class="d-dash" d="M791,106 L791,142 L89,142 L89,108" marker-end="url(#a1)"/>
+        <text class="d-lbl" x="440" y="137" text-anchor="middle">observés par la caméra</text>
+      </svg>
+      </div>
+      <figcaption>L'état cible provient de GAMA (contexte) ou d'un script local ; tout le reste est indépendant.</figcaption>
+    </figure>
+
+    <p>Contexte institutionnel et ressources :</p>
+    <ul>
+      <li>Site du projet et concept : <a href="https://project-tango.fr/#concept" target="_blank" rel="noopener">project-tango.fr</a></li>
+      <li>Organisation GitHub : <a href="https://github.com/tango-projet" target="_blank" rel="noopener">github.com/tango-projet</a></li>
+      <li>Plateforme de simulation : <a href="https://gama-platform.org/" target="_blank" rel="noopener">GAMA</a> (développée notamment à l'UMMISCO / IRD)</li>
+      <li>Antériorité très proche, le <strong>Robotarium</strong> (Georgia Tech), testbed multi-robots à perception externalisée par caméra fixe : <a href="https://ieeexplore.ieee.org/document/8960572" target="_blank" rel="noopener">article IEEE CSM 2020</a>, <a href="https://www.robotarium.gatech.edu/" target="_blank" rel="noopener">site</a></li>
+    </ul>
+
+    <h3>Hypothèses structurantes</h3>
+    <p>Ces deux hypothèses conditionnent tout le reste et expliquent la forme des deux chantiers :</p>
+    <ol>
+      <li><strong>Perception entièrement externalisée.</strong> Les robots sont des plateformes « bêtes » : leurs mesures internes (odométrie, position embarquée) ne sont <em>pas</em> une source de vérité. Un ordinateur relié à une <strong>caméra fixe</strong> (ou éventuellement un smartphone) observe la scène, détecte les robots (probablement via des <strong>AprilTags</strong>), estime leur état, calcule les commandes et les envoie. Les robots deviennent de simples exécutants.</li>
+      <li><strong>Frugalité et généricité.</strong> On privilégie des solutions peu coûteuses, robustes et reproductibles, sur une machine modeste. Le cadre doit rester <strong>largement indépendant du matériel</strong> : brancher une flotte de robots différentiels quelconques sans réécrire d'architecture ni régler à la main chaque plateforme. Matériel de référence : châssis imprimés en 3D, Raspberry Pi Zero 2 W, Wi-Fi.</li>
+    </ol>
+
+    <h3>Nature exploratoire</h3>
+    <p>L'objectif <strong>n'est pas</strong> d'inventer de nouveaux algorithmes de vision ou de contrôle, mais d'<strong>identifier et comparer</strong> les approches existantes les mieux adaptées à un framework générique, selon quatre critères récurrents : <strong>précision, robustesse, simplicité de mise en œuvre, coût de calcul</strong>.</p>
+
+    <div class="callout">
+      <span class="k">Principe directeur · déploiement zéro-configuration</span>
+      Le cadre doit pouvoir se déployer facilement dans des contextes <strong>très différents</strong>. On écarte donc toute solution qui <strong>suppose une position de caméra donnée</strong> (hauteur, angle, vue strictement verticale) ou qui repose sur des <strong>contrôleurs pré-réglés</strong> (gains PID fixés à la main pour un robot ou une surface). La transformation entre la caméra et le monde, ainsi que le comportement propre de chaque robot, doivent être <strong>récupérés automatiquement au démarrage</strong> ou <strong>adaptés en ligne</strong>, jamais codés en dur pour un déploiement particulier. C'est le filtre principal pour trancher entre deux approches concurrentes tout au long des deux chantiers.
+    </div>
+
+    <hr class="divider">
+  </section>
+
+  <!-- ============ 2 ============ -->
+  <section id="trafic">
+    <h2><span class="num">02</span>Cas d'étude de référence : le trafic en convoi</h2>
+    <p class="lead">Le modèle testé actuellement est un <strong>modèle de trafic</strong> : un convoi de robots qui se suivent. En introduisant une <strong>petite probabilité de freinage</strong> sur le leader, on observe qu'une perturbation locale se <strong>propage et s'amplifie</strong> vers l'arrière du convoi, jusqu'à provoquer des arrêts. <strong>Objectif à court terme : reproduire en réel ce résultat de simulation, très classique.</strong></p>
+
+    <!-- Déposer les GIF dans un dossier ./assets/ à côté de ce fichier. -->
+    <figure class="gif">
+      <div class="ph">GIF à insérer<br><code>assets/convoi_stable.gif</code></div>
+      <img src="assets/convoi_stable.gif" alt="Convoi stable, perturbation amortie" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'">
+      <figcaption>Convoi stable : la perturbation du leader s'amortit en remontant le convoi.</figcaption>
+    </figure>
+
+    <figure class="gif">
+      <div class="ph">GIF à insérer<br><code>assets/convoi_instable.gif</code></div>
+      <img src="assets/convoi_instable.gif" alt="Convoi instable, propagation et amplification" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'">
+      <figcaption>Convoi instable : la perturbation se propage et s'amplifie vers l'arrière, jusqu'aux arrêts.</figcaption>
+    </figure>
+
+    <p>Ce phénomène est un grand classique de la dynamique du trafic ; le nommer précisément aide à retrouver la littérature :</p>
+    <ul>
+      <li><strong>Modèle de Nagel-Schreckenberg (NaSch, 1992).</strong> Automate cellulaire minimal à 4 règles par pas de temps : accélération, freinage pour respecter l'espace disponible, <strong>randomisation</strong> (probabilité <em>p</em> de ralentir d'un cran, exactement votre « petite probabilité de freiner »), puis déplacement. Reproduit les <em>phantom jams</em>. Vulgarisation : <a href="https://www.mysimulator.uk/articles/traffic-jam/" target="_blank" rel="noopener">mysimulator.uk</a> ; revue : <a href="https://arxiv.org/pdf/physics/0509082" target="_blank" rel="noopener">Cellular Automata Models of Road Traffic (arXiv)</a>.</li>
+      <li><strong>Stabilité de chaîne (<em>string stability</em>).</strong> Cadre théorique décrivant si une perturbation de vitesse du leader est <strong>amortie</strong> ou <strong>amplifiée</strong> en remontant le peloton. Le ratio d'amplitude arrière sur avant Λ résume le comportement (Λ&lt;1 stable, Λ&gt;1 instable). <a href="https://www.sciencedirect.com/science/article/abs/pii/S0096300322008438" target="_blank" rel="noopener">String stability in traffic flows (ScienceDirect)</a>.</li>
+      <li><strong>Expérience de Sugiyama (2008).</strong> 22 voitures sur un anneau à vitesse et espacement constants ; une onde d'arrêt spontanée apparaît en quelques minutes. L'équivalent physique presque exact de ce que TANGO veut reproduire avec des robots.</li>
+    </ul>
+
+    <div class="callout">
+      <span class="k">Pourquoi c'est le bon fil rouge</span>
+      Reproduire fidèlement une amplification impose (a) une <strong>localisation précise et à faible latence</strong> pour distinguer une vraie propagation d'un artefact de mesure (chantier&nbsp;1), et (b) un <strong>contrôle fidèle et homogène entre robots</strong> pour que les écarts observés viennent de la dynamique simulée, pas de robots mal réglés (chantier&nbsp;2). C'est un excellent test d'intégration de bout en bout.
+    </div>
+
+    <hr class="divider">
+  </section>
+
+  <!-- ============ 3 ============ -->
+  <section id="chantier1">
+    <h2><span class="num">03</span>Chantier 1 · Reconstruction de l'état réel</h2>
+    <p class="lead">Perception, calibration et recalage géométrique.</p>
+
+    <h3>Objectif</h3>
+    <p>Construire une représentation cohérente reliant le <strong>monde physique</strong> (les robots sur le terrain) à une éventuelle <strong>simulation physique</strong>, avec une <strong>cohérence temporelle</strong> entre perception et commande. À chaque instant, le système reconstruit l'état réel des robots vus par la caméra et le convertit entre référentiels. Le terrain n'est pas une surface dédiée mais une <strong>aire quelconque</strong>, probablement <strong>délimitée par des AprilTags de bordure</strong>. Tout se développe avec un terrain, une caméra et un script local.</p>
+
+    <h3>Sous-problèmes</h3>
+    <ul>
+      <li><strong>Détection et identification</strong> des robots dans l'image.</li>
+      <li><strong>Estimation de pose</strong> : position (x, y) et orientation (θ) de chaque robot.</li>
+      <li><strong>Délimitation et recalage du terrain</strong> : des AprilTags de bordure (positions relatives connues) définissent l'aire de jeu et le repère monde, sans supposer de forme ni de taille fixes.</li>
+      <li><strong>Calibration entre caméra et monde physique</strong> : passer des pixels aux coordonnées métriques du terrain.</li>
+      <li><strong>Transformations de référentiels</strong> : des coordonnées image aux coordonnées physiques, puis (in fine) vers GAMA.</li>
+      <li><strong>Synchronisation temporelle</strong> : accorder les cadences caméra et boucle de commande, compenser les latences (la « boucle de correction de dérive » du projet).</li>
+    </ul>
+
+    <figure class="diagram">
+      <div class="scroll">
+      <svg viewBox="0 0 880 110" role="img" aria-label="Chaîne de référentiels : coordonnées image vers coordonnées terrain via homographie ou solvePnP, puis vers coordonnées GAMA via une similitude.">
+        <defs><marker id="a2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--deep)"/></marker></defs>
+        <rect class="d-box" x="10"  y="40" width="210" height="52" rx="8"/>
+        <text class="d-txt" x="115" y="63" text-anchor="middle">Coordonnées image</text>
+        <text class="d-lbl" x="115" y="80" text-anchor="middle">pixels</text>
+        <rect class="d-box" x="335" y="40" width="210" height="52" rx="8"/>
+        <text class="d-txt" x="440" y="63" text-anchor="middle">Coordonnées terrain</text>
+        <text class="d-lbl" x="440" y="80" text-anchor="middle">mètres</text>
+        <rect class="d-box" x="660" y="40" width="210" height="52" rx="8"/>
+        <text class="d-txt" x="765" y="70" text-anchor="middle">Coordonnées GAMA</text>
+        <path class="d-arrow" d="M220,66 L333,66" marker-end="url(#a2)"/>
+        <text class="d-lbl" x="276" y="34" text-anchor="middle">homographie / solvePnP</text>
+        <path class="d-arrow" d="M545,66 L658,66" marker-end="url(#a2)"/>
+        <text class="d-lbl" x="601" y="34" text-anchor="middle">similitude</text>
+      </svg>
+      </div>
+      <figcaption>Chaîne de référentiels à établir. Le dernier maillon vers GAMA est une simple similitude, ajoutée en fin de parcours.</figcaption>
+    </figure>
+
+    <h3>Pistes à comparer</h3>
+    <p><strong>Marqueurs visuels (détection, identification, pose) :</strong> le cœur du chantier.</p>
+    <ul>
+      <li><strong>AprilTag</strong> (APRIL Lab, Univ. of Michigan) : marqueurs conçus pour la robotique, robustes à basse résolution, éclairage inégal et rotation, pose 6-DOF depuis un seul marqueur d'échelle connue. Bibliothèque C légère : <a href="https://github.com/AprilRobotics/apriltag" target="_blank" rel="noopener">AprilRobotics/apriltag</a> (familles <code>tagStandard41h12</code> ou <code>tag36h11</code>). Articles : <a href="https://april.eecs.umich.edu/pdfs/olson2011tags.pdf" target="_blank" rel="noopener">Olson 2011</a>, <a href="https://ieeexplore.ieee.org/document/7759617/" target="_blank" rel="noopener">AprilTag 2 (2016)</a>.</li>
+      <li><strong>ArUco / ChArUco</strong> (intégré à OpenCV) : marqueurs carrés binaires, pose via <code>detectMarkers</code> et <code>solvePnP</code>, très facile en Python. <a href="https://docs.opencv.org/4.x/d5/dae/tutorial_aruco_detection.html" target="_blank" rel="noopener">Tutoriel officiel</a>. OpenCV sait raffiner les coins avec la méthode AprilTag (<code>CORNER_REFINE_APRILTAG</code>) : comparer les deux familles dans un même pipeline est simple. Ordre de grandeur : environ ±5 à 10 mm à 1 m pour un marqueur de 10 cm bien calibré.</li>
+      <li>Autres familles pour la revue (ARTag, reacTIVision), probablement hors périmètre.</li>
+    </ul>
+    <p><strong>Calibration de caméra, automatique et sans position supposée.</strong></p>
+    <ul>
+      <li>Intrinsèques et distorsion via OpenCV <code>calibrateCamera</code> (échiquier ou ChArUco) : propres à <em>l'optique</em>, donc faits une seule fois et réutilisables d'un déploiement à l'autre. Voir le <a href="https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html" target="_blank" rel="noopener">tutoriel calibration</a>.</li>
+      <li><strong>Caméra à position quelconque, terrain quelconque</strong> : on ne suppose ni hauteur, ni angle, ni vue strictement verticale, ni forme de terrain. La transformation entre la caméra et le plan du terrain (une <strong>homographie</strong>) est <strong>estimée automatiquement au démarrage</strong>, typiquement à partir des <strong>AprilTags de bordure</strong> qui délimitent l'aire de jeu (leurs positions relatives connues fixent le repère monde et l'échelle), puis vaut pour toute la session. Une vue oblique est acceptable. Voir <a href="https://learnopencv.com/augmented-reality-using-aruco-markers-in-opencv-c-python/" target="_blank" rel="noopener">LearnOpenCV (homographie)</a> et <code>findHomography</code>.</li>
+    </ul>
+    <p><strong>Synchronisation temporelle.</strong> À instrumenter : horodater les détections, mesurer la latence entre caméra et commande, choisir le mode d'entraînement de la boucle, prévoir une compensation de retard.</p>
+
+    <div class="criteria">
+      <span class="k">Critères d'évaluation</span>
+      <ul>
+        <li>Précision de localisation.</li>
+        <li>Indépendance vis-à-vis de la position et de l'angle de la caméra (calibration automatique au démarrage).</li>
+        <li>Robustesse : éclairage, occlusions, flou de mouvement.</li>
+        <li>Simplicité de mise en œuvre.</li>
+        <li>Coût de calcul : cadence tenable sur une machine modeste.</li>
+        <li>Facilité d'intégration.</li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+  </section>
+
+  <!-- ============ 4 ============ -->
+  <section id="chantier2">
+    <h2><span class="num">04</span>Chantier 2 · Couche générique de contrôle</h2>
+
+    <h3>Objectif</h3>
+    <p>Transformer un <strong>état cible</strong> (de n'importe quelle source : trajectoire codée en dur, générateur de consignes, mini-modèle de convoi local) en <strong>commandes moteur</strong> permettant à une grande variété de robots différentiels de reproduire le comportement voulu. Le système travaille en <strong>boucle fermée</strong> : la caméra estime l'état réel en continu et les commandes sont recalculées à chaque itération pour réduire l'écart.</p>
+
+    <figure class="diagram">
+      <div class="scroll">
+      <svg viewBox="0 0 740 200" role="img" aria-label="Boucle de contrôle fermée : état cible et état réel comparés, écart envoyé au contrôleur, puis au robot, observé par la caméra qui met à jour l'état réel.">
+        <defs><marker id="a3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--deep)"/></marker></defs>
+        <rect class="d-box" x="10"  y="40" width="118" height="44" rx="7"/>
+        <text class="d-txt" x="69"  y="67" text-anchor="middle">État cible</text>
+        <circle class="d-box accent" cx="180" cy="62" r="24"/>
+        <text class="d-txt" x="180" y="67" text-anchor="middle">écart</text>
+        <rect class="d-box" x="242" y="40" width="184" height="44" rx="7"/>
+        <text class="d-txt" x="334" y="60" text-anchor="middle">Contrôleur adaptatif</text>
+        <text class="d-lbl" x="334" y="75" text-anchor="middle">ou auto-calibré</text>
+        <rect class="d-box" x="452" y="40" width="140" height="44" rx="7"/>
+        <text class="d-txt" x="522" y="67" text-anchor="middle">Robot diff.</text>
+        <rect class="d-box" x="616" y="40" width="112" height="44" rx="7"/>
+        <text class="d-txt" x="672" y="67" text-anchor="middle">Caméra</text>
+        <path class="d-arrow" d="M128,62 L154,62" marker-end="url(#a3)"/>
+        <path class="d-arrow" d="M204,62 L240,62" marker-end="url(#a3)"/>
+        <path class="d-arrow" d="M426,62 L450,62" marker-end="url(#a3)"/>
+        <path class="d-arrow" d="M592,62 L614,62" marker-end="url(#a3)"/>
+        <rect class="d-box" x="115" y="118" width="130" height="44" rx="7"/>
+        <text class="d-txt" x="180" y="145" text-anchor="middle">État réel estimé</text>
+        <path class="d-arrow" d="M180,118 L180,88" marker-end="url(#a3)"/>
+        <path class="d-dash" d="M672,84 L672,180 L180,180 L180,164" marker-end="url(#a3)"/>
+        <text class="d-lbl" x="430" y="174" text-anchor="middle">boucle fermée · perception externe</text>
+      </svg>
+      </div>
+      <figcaption>La boucle de correction : l'état réel observé ramène en permanence le robot vers l'état cible.</figcaption>
+    </figure>
+
+    <p>Les mises à jour étant fréquentes, le problème relève du <strong>suivi (path following)</strong> plutôt que du <strong>path planning</strong> classique : la trajectoire est corrigée en permanence à partir de l'état observé. (Distinguer le <em>path following</em>, suivre une géométrie, du <em>trajectory tracking</em>, suivre une position paramétrée par le temps.)</p>
+
+    <h3>La contrainte centrale : la généricité</h3>
+    <p>C'est le vrai défi. Un contrôleur à réglage manuel, typiquement un <strong>PID dont les gains doivent être ajustés pour chaque robot, chaque surface, chaque déploiement</strong>, est incompatible avec l'objectif : brancher une nouvelle flotte <strong>sans réglage manuel</strong>. On n'utilise donc <strong>pas de PID pré-configuré</strong> transporté d'un site à l'autre, et aucun gain n'est fixé à la main au déploiement. Atout majeur : la <strong>caméra fournit une vérité terrain externe</strong>, ce qui permet d'identifier directement la relation entre commande et mouvement réel de chaque robot, sans capteur embarqué.</p>
+
+    <h3>Deux approches à comparer</h3>
+    <p><strong>1. Contrôle adaptatif (ajustement en ligne).</strong> Le contrôleur estime en continu le comportement propre de chaque robot pendant qu'il roule et s'y ajuste, sans réglage préalable. C'est la voie la plus robuste aux conditions changeantes (batterie qui faiblit, sol différent, usure), puisqu'il se ré-adapte en permanence. Familles à couvrir : MRAC (<em>Model Reference Adaptive Control</em>), mode glissant adaptatif, estimation en ligne des paramètres, backstepping (de la cinématique vers la dynamique). Point de vigilance : le coût de calcul sur Raspberry Pi.</p>
+    <p><strong>2. Phase d'auto-calibration au lancement.</strong> Avant utilisation, on déclenche une courte routine automatique : chaque robot exécute une séquence de mouvements prédéfinie, la caméra observe sa réponse, et le système identifie tout seul son modèle (relation commande vers mouvement, échelle des roues, biais gauche/droite). Un contrôleur standard s'appuie ensuite sur ces paramètres identifiés. Avantage : plus léger à l'exécution ; limite : suppose que les paramètres restent stables pendant la session.</p>
+    <p>Les deux se combinent bien : une auto-calibration au lancement pour partir juste, complétée d'une adaptation en ligne légère pour absorber les dérives.</p>
+
+    <h3>Pistes et références</h3>
+    <ul>
+      <li><strong>Baseline géométrique (référence à battre) :</strong> Pure Pursuit, suivi par point d'anticipation (<em>lookahead</em>), simple et éprouvé sur robots différentiels. <a href="https://wiki.purduesigbots.com/software/control-algorithms/basic-pure-pursuit" target="_blank" rel="noopener">Purdue SIGBots</a>, <a href="https://www.mathworks.com/help/robotics/ug/path-following-for-differential-drive-robot.html" target="_blank" rel="noopener">exemple MATLAB</a>. Son lookahead reste un paramètre à régler, donc à évaluer côté généricité.</li>
+      <li><strong>Contrôle adaptatif :</strong> <a href="https://link.springer.com/article/10.1007/s12541-015-0140-z" target="_blank" rel="noopener">identification en ligne des paramètres (Springer)</a> ; <a href="https://www.sciencedirect.com/science/article/abs/pii/S0019057824000612" target="_blank" rel="noopener">mode glissant adaptatif avec estimation du glissement (ScienceDirect)</a>.</li>
+      <li><strong>Auto-calibration et identification du modèle :</strong> UMBmark (Borenstein et Feng, 1996) pour les erreurs systématiques d'un robot différentiel ; <a href="https://arxiv.org/pdf/2204.06776" target="_blank" rel="noopener">calibration en ligne du modèle cinématique (arXiv)</a>, très aligné avec TANGO puisque la caméra sert de vérité terrain ; <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11853209/" target="_blank" rel="noopener">auto-tuning de contrôleur en ligne (PMC)</a>.</li>
+    </ul>
+
+    <div class="criteria">
+      <span class="k">Critères d'évaluation</span>
+      <ul>
+        <li>Capacité à fonctionner sur des robots variés sans réécriture.</li>
+        <li>Nécessité ou non d'une calibration préalable (durée, degré d'automatisation).</li>
+        <li>Robustesse aux variations : batterie, sol, usure, dispersion entre exemplaires.</li>
+        <li>Coût de calcul compatible avec la machine hôte.</li>
+        <li>Degré d'intervention humaine au déploiement (objectif : zéro).</li>
+      </ul>
+    </div>
+
+    <p>En résumé, ce chantier ne consiste pas seulement à trouver <em>un bon contrôleur</em>, mais à concevoir une <strong>couche de contrôle générique</strong> capable de piloter une grande variété de robots différentiels avec un minimum de configuration, en s'appuyant uniquement sur la perception externe.</p>
+
+    <hr class="divider">
+  </section>
+
+  <!-- ============ 5 ============ -->
+  <section id="etape">
+    <h2><span class="num">05</span>Première étape concrète : reproduire le convoi en réel</h2>
+    <p class="lead">Un chemin minimal de bout en bout qui réunit les deux chantiers (développés séparément) et fournit un premier démonstrateur mesurable, le modèle de convoi tournant dans un simple script local.</p>
+    <ol>
+      <li><strong>Perception (chantier 1) :</strong> caméra fixe observant le terrain (délimité par des AprilTags de bordure), un AprilTag/ArUco par robot, homographie image vers terrain estimée au démarrage, puis exposition des poses (x, y, θ) horodatées.</li>
+      <li><strong>Générateur d'états cibles :</strong> le modèle de convoi (type Nagel-Schreckenberg, freinage probabiliste du leader) tourne dans un <strong>script local</strong> qui reçoit les poses réelles et émet les états cibles.</li>
+      <li><strong>Contrôle (chantier 2) :</strong> pour chaque robot, un contrôleur de suivi (baseline Pure Pursuit, puis variante adaptative ou auto-calibrée) ramène le robot vers son état cible.</li>
+      <li><strong>Mesure :</strong> enregistrer vitesses et positions, puis vérifier que la perturbation du leader <strong>se propage et s'amplifie</strong> vers l'arrière (ratio de <em>string stability</em> Λ), comme dans la simulation.</li>
+    </ol>
+    <p>Cette boucle donne un critère de succès clair et objectivable, et met en évidence très tôt les points durs de latence (chantier 1) et d'hétérogénéité inter-robots (chantier 2).</p>
+
+    <hr class="divider">
+  </section>
+
+  <!-- ============ 6 ============ -->
+  <section id="ressources" class="res">
+    <h2><span class="num">06</span>Récapitulatif des ressources</h2>
+
+    <h3>Projet et plateforme</h3>
+    <ul>
+      <li><a href="https://project-tango.fr/#concept" target="_blank" rel="noopener">Site TANGO</a></li>
+      <li><a href="https://github.com/tango-projet" target="_blank" rel="noopener">GitHub TANGO</a></li>
+      <li><a href="https://gama-platform.org/" target="_blank" rel="noopener">GAMA</a></li>
+      <li><a href="https://www.robotarium.gatech.edu/" target="_blank" rel="noopener">Robotarium</a> (antériorité, perception externalisée)</li>
+    </ul>
+
+    <h3>Cas d'étude trafic</h3>
+    <ul>
+      <li><a href="https://www.mysimulator.uk/articles/traffic-jam/" target="_blank" rel="noopener">Nagel-Schreckenberg et phantom jams (vulgarisation)</a></li>
+      <li><a href="https://arxiv.org/pdf/physics/0509082" target="_blank" rel="noopener">Automates cellulaires de trafic (revue)</a></li>
+      <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0096300322008438" target="_blank" rel="noopener">String stability</a></li>
+    </ul>
+
+    <h3>Chantier 1 · perception</h3>
+    <ul>
+      <li><a href="https://github.com/AprilRobotics/apriltag" target="_blank" rel="noopener">AprilTag (dépôt)</a>, <a href="https://april.eecs.umich.edu/pdfs/olson2011tags.pdf" target="_blank" rel="noopener">article 2011</a></li>
+      <li><a href="https://docs.opencv.org/4.x/d5/dae/tutorial_aruco_detection.html" target="_blank" rel="noopener">ArUco (tutoriel OpenCV)</a></li>
+      <li><a href="https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html" target="_blank" rel="noopener">Calibration caméra OpenCV</a></li>
+      <li><a href="https://learnopencv.com/augmented-reality-using-aruco-markers-in-opencv-c-python/" target="_blank" rel="noopener">Homographie et AR (LearnOpenCV)</a></li>
+    </ul>
+
+    <h3>Chantier 2 · contrôle</h3>
+    <ul>
+      <li><a href="https://wiki.purduesigbots.com/software/control-algorithms/basic-pure-pursuit" target="_blank" rel="noopener">Pure Pursuit (SIGBots)</a>, <a href="https://www.mathworks.com/help/robotics/ug/path-following-for-differential-drive-robot.html" target="_blank" rel="noopener">Path following (MATLAB)</a></li>
+      <li><a href="https://link.springer.com/article/10.1007/s12541-015-0140-z" target="_blank" rel="noopener">Identification de paramètres (Springer)</a></li>
+      <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0019057824000612" target="_blank" rel="noopener">Mode glissant adaptatif et slip (ScienceDirect)</a></li>
+      <li><a href="https://arxiv.org/pdf/2204.06776" target="_blank" rel="noopener">Calibration en ligne du modèle cinématique (arXiv)</a></li>
+      <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11853209/" target="_blank" rel="noopener">Auto-tuning en ligne (PMC)</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    TANGO · Document de référence · chantiers exploratoires · perception et contrôle · 2026
+  </footer>
+
+</div>
+
+<style>
+  @keyframes brake{
+    0%,100%{fill:var(--deep); r:9}
+    6%{fill:var(--signal); r:10.5}
+    16%{fill:var(--deep); r:9}
+  }
+  @keyframes brake-lead{
+    0%,100%{fill:var(--signal); r:9.5}
+    6%{fill:var(--signal); r:11}
+    16%{fill:var(--signal); r:9.5}
+  }
+</style>
+</body>
+</html>
