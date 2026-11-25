@@ -466,6 +466,44 @@
   }
   .aff.tango::before { background: var(--tango); }
 
+  /* Team publications (light surface) */
+  .pubs { margin-top: var(--space-8); }
+  .pubs-label {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-4);
+    display: flex; align-items: center; gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+  .pubs-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+  .pub {
+    background: var(--paper); border: 1px solid var(--border); border-radius: var(--r-4);
+    padding: var(--space-6);
+    display: flex; flex-direction: column; gap: var(--space-3);
+  }
+  .pub-meta {
+    display: flex; flex-wrap: wrap; gap: var(--space-3);
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .pub-kind { color: var(--tango-deep); }
+  .pub-venue { color: var(--ink-5); }
+  .pub h4 {
+    font-family: var(--font-display); font-weight: 700; font-size: 22px;
+    letter-spacing: -0.02em; line-height: 1.2; color: var(--ink);
+    text-wrap: balance; margin: 0;
+  }
+  .pub-authors { color: var(--ink-4); font-size: 14px; }
+  .pub-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-5); }
+  .pub-link, .pub-bib {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.04em;
+    color: var(--ink); text-decoration: none;
+  }
+  .pub-link:hover, .pub-bib:hover { color: var(--tango-deep); }
+  .pub-bib {
+    background: none; border: 0; padding: 0; cursor: pointer;
+    text-decoration: underline; text-underline-offset: 3px;
+  }
+
   /* ---------- References / footer ---------- */
   .refs-section { background: var(--ink); color: var(--paper); }
   .refs-section .section-head h2 { color: var(--paper); }
@@ -935,6 +973,30 @@
       <span class="aff"><a href="https://www.irit.fr/" target="_blank">IRIT</a></span>
       <span class="aff"><a href="https://gama-platform.org/" target="_blank">GAMA Platform</a></span>
     </div>
+
+    <div class="pubs">
+      <div class="pubs-label">Publications</div>
+      <article class="pub">
+        <div class="pub-meta">
+          <span class="pub-kind">Conference paper</span>
+          <span class="pub-venue">GAMA Days · 2026</span>
+        </div>
+        <h4>TANGO: An open-source framework to visualize GAMA simulations through tangible robots</h4>
+        <div class="pub-authors">Arthur Brugière, Baptiste Lesquoy</div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://hal.science/hal-05880296v1" target="_blank" rel="noopener">hal-05880296v1 →</a>
+          <button type="button" class="pub-bib" data-bib="bib-hal-05880296">Copy BibTeX</button>
+        </div>
+        <template id="bib-hal-05880296">@inproceedings{brugiere2026tango,
+  title     = {{TANGO}: An open-source framework to visualize {GAMA} simulations through tangible robots},
+  author    = {Brugi{\`e}re, Arthur and Lesquoy, Baptiste},
+  booktitle = {GAMA Days},
+  year      = {2026},
+  url       = {https://hal.science/hal-05880296v1},
+  hal_id    = {hal-05880296v1}
+}</template>
+      </article>
+    </div>
   </div>
 </section>
 
@@ -1014,6 +1076,22 @@
     </div>
   </div>
 </footer>
+
+<script>
+  document.querySelectorAll('.pub-bib').forEach(btn => {
+    const label = btn.textContent;
+    btn.addEventListener('click', async () => {
+      const bib = document.getElementById(btn.dataset.bib).innerHTML.trim();
+      try {
+        await navigator.clipboard.writeText(bib);
+        btn.textContent = 'Copied ✓';
+      } catch {
+        btn.textContent = 'Copy failed';
+      }
+      setTimeout(() => { btn.textContent = label; }, 1800);
+    });
+  });
+</script>
 
 </body>
 </html>
